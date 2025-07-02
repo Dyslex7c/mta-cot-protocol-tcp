@@ -1,0 +1,35 @@
+syntax = "proto3";
+package mta;
+
+import "nanopb.proto";
+
+message CorrelationDelta {
+    uint32 delta = 1;
+}
+
+message BobSetup {
+    bool success = 1;
+    repeated bytes ot_messages = 2 [(nanopb).type = FT_CALLBACK];
+    bytes public_key = 3 [(nanopb).max_size = 256];
+    uint32 num_ot_instances = 4;
+}
+
+message AliceMessages {
+    uint32 masked_share = 1;
+    repeated bool ot_choices = 2 [(nanopb).type = FT_CALLBACK];
+    repeated bytes encrypted_shares = 3 [(nanopb).type = FT_CALLBACK];
+}
+
+message BobMessages {
+    bool success = 1;
+    repeated bytes ot_responses = 2 [(nanopb).type = FT_CALLBACK];
+    bytes encrypted_result = 3 [(nanopb).max_size = 256];
+    uint32 correlation_check = 4;
+    uint32 masked_share = 5;
+}
+
+message MTAResult {
+    bool success = 1;
+    uint32 additive_share = 2;
+    string error_message = 3 [(nanopb).max_size = 128];
+}
